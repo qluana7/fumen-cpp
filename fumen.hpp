@@ -48,12 +48,13 @@ inline static std::string encode(const fumen_pages& _pgs) {
 
         _epg.m_field = _pg.m_field;
         _epg.m_comment = _pg.m_comment;
-        _epg.m_operation = fumen::details::field_operation {
-            fumen::details::defs::to_char(_pg.m_operation->m_piece),
-            fumen::details::defs::to_string(_pg.m_operation->m_rotation),
-            _pg.m_operation->m_x,
-            _pg.m_operation->m_y
-        };
+        if (_pg.m_operation)
+            _epg.m_operation = fumen::details::field_operation {
+                fumen::details::defs::to_char(_pg.m_operation->m_piece),
+                fumen::details::defs::to_string(_pg.m_operation->m_rotation),
+                _pg.m_operation->m_x,
+                _pg.m_operation->m_y
+            };
         _epg.m_flags.all = _pg.m_flags.all;
 
         _epgs.push_back(std::move(_epg));
