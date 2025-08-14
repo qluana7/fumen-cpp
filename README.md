@@ -7,7 +7,8 @@
 - Encode and decode fumen strings to and from C++ objects
 - Full support for Tetris field, piece operations, comments, and quiz mode
 - Minimal dependencies (uses only the C++ standard library)
-- Designed for C++17 and later
+- Designed for C++17 and later </br>
+└─ This library was originally designed for C++20. If you encounter any bugs when using C++17, please open an issue.
 
 ## Getting Started
 
