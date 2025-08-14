@@ -1,6 +1,6 @@
 # fumen++
 
-**fumen++** is a C++ library for encoding and decoding [fumen](https://fumen.zui.jp/) strings, which represent Tetris field states. This project is a C++ port of the original [knewjade/tetris-fumen](https://github.com/knewjade/tetris-fumen) (TypeScript) implementation.
+**fumen++** is a header only C++ library for encoding and decoding [fumen](https://fumen.zui.jp/) strings, which represent Tetris field states. This project is a C++ port of the original [knewjade/tetris-fumen](https://github.com/knewjade/tetris-fumen) (TypeScript) implementation.
 
 ## Features
 
