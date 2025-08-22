@@ -40,6 +40,12 @@ inline static char piece_to_char(piece _p)
 inline static piece char_to_piece(char _ch)
 { return fumen::details::defs::to_piece(_ch); }
 
+inline static bool is_valid_piece(char _p)
+{ return static_cast<u8>(char_to_piece(_p)) <= 8u; }
+
+inline static bool is_valid_piece(piece _p)
+{ return static_cast<u8>(_p) <= 8u; }
+
 inline static std::string encode(const fumen_pages& _pgs) {
     fumen::details::encode_pages _epgs;
     _epgs.reserve(_pgs.size());
