@@ -8,8 +8,6 @@
 
 namespace fumen::details {
 
-using piece_type = char;
-
 enum class piece : u8 {
     empty, I, L, O, Z, T, J, S, gray
 };
@@ -32,13 +30,7 @@ public:
         return 1u <= _value && _value <= 7u;
     }
 
-    static constexpr bool is_valid_piece(char _c)
-    { return to_piece(_c) == static_cast<piece>(9u); }
-
-    static bool is_valid_rotation(const std::string& _str)
-    { return to_rotation(_str) != static_cast<rotation>(4u); }
-
-    static constexpr piece_type to_char(piece _piece) {
+    static constexpr char to_char(piece _piece) {
         switch (_piece) {
             case piece::empty: return '_';
             case piece::I:     return 'I';
@@ -55,7 +47,7 @@ public:
         return '\0';
     }
 
-    static constexpr piece to_piece(piece_type _ch) {
+    static constexpr piece to_piece(char _ch) {
         switch (_ch) {
             case '_': return piece::empty;
             case 'I': return piece::I;
@@ -70,28 +62,6 @@ public:
 
         // For error handling
         return static_cast<piece>(9u);
-    }
-
-    static std::string to_string(rotation _rotation) {
-        switch (_rotation) {
-            case rotation::spawn:   return "spawn";
-            case rotation::right:   return "right";
-            case rotation::reverse: return "reverse";
-            case rotation::left:    return "left";
-        }
-
-        // For error handling
-        return "";
-    }
-
-    static rotation to_rotation(const std::string& _str) {
-        if (_str == "spawn")   return rotation::spawn;
-        if (_str == "right")   return rotation::right;
-        if (_str == "reverse") return rotation::reverse;
-        if (_str == "left")    return rotation::left;
-        
-        // For error handling
-        return static_cast<rotation>(4u);
     }
 };
 

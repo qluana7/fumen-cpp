@@ -10,28 +10,28 @@
 namespace fumen::details {
 
 struct field_operation {
-    piece_type m_piece;
-    std::string m_rotation;
+    piece m_piece;
+    rotation m_rotation;
     u32 m_x, m_y;
 };
 
 struct mino {
     mino() = default;
-    mino(piece_type _piece, const std::string& _rotation, u32 _x, u32 _y)
+    mino(piece _piece, rotation _rotation, u32 _x, u32 _y)
     : m_piece(_piece), m_rotation(_rotation), m_x(_x), m_y(_y) {}
     mino(const field_operation& _op)
     : m_piece(_op.m_piece), m_rotation(_op.m_rotation), m_x(_op.m_x), m_y(_op.m_y) {}
 
 private:
-    piece_type m_piece;
-    std::string m_rotation;
+    piece m_piece;
+    rotation m_rotation;
     u32 m_x, m_y;
 
 public:
     container_type positions() const {
         container_type _cont = field_util::get_block_positions(
-            defs::to_piece(m_piece),
-            defs::to_rotation(m_rotation),
+            m_piece,
+            m_rotation,
             m_x, m_y
         );
 
@@ -46,11 +46,6 @@ public:
     }
 
     bool is_valid() const {
-        if (!defs::is_valid_piece(m_piece) ||
-            !defs::is_valid_rotation(m_rotation)) {
-            return false;
-        }
-
         container_type _cont = positions();
         return std::all_of(_cont.begin(), _cont.end(), [] (const auto& _p) {
             auto [_x, _y] = _p;
@@ -58,8 +53,8 @@ public:
         });
     }
 
-    piece_type _piece() const { return m_piece; }
-    std::string rotation() const { return m_rotation; }
+    piece piece() const { return m_piece; }
+    rotation rotation() const { return m_rotation; }
     u32 x() const { return m_x; }
     u32 y() const { return m_y; }
 
@@ -116,7 +111,7 @@ public:
             throw std::invalid_argument("Cannot fill the field with the given mino.");
         }
 
-        m_field.fill_all(_mino.positions(), defs::to_piece(_mino._piece()));
+        m_field.fill_all(_mino.positions(), _mino.piece());
     }
 
     void put(field_operation _op) { put(mino(_op)); }
@@ -130,11 +125,11 @@ public:
 
     void clear_line() { m_field.clear_line(); }
 
-    piece_type at(i32 _x, i32 _y) const
-    { return defs::to_char(m_field.get_number_at(_x, _y)); }
+    piece at(i32 _x, i32 _y) const
+    { return m_field.get_number_at(_x, _y); }
 
-    void set(u32 _x, u32 _y, piece_type _p)
-    { m_field.set_number_at(_x, _y, defs::to_piece(_p)); }
+    void set(u32 _x, u32 _y, piece _p)
+    { m_field.set_number_at(_x, _y, _p); }
 
     std::string to_string(bool _reduced = true, char _sep = '\n', bool _garbage = true) const {
         i32 _min_y = _garbage ? -1 : 0;
@@ -145,7 +140,7 @@ public:
             std::string _line(FIELD_WIDTH, ' ');
 
             for (u32 _x = 0; _x < FIELD_WIDTH; _x++)
-                _line[_x] = at(_x, _y);
+                _line[_x] = defs::to_char(at(_x, _y));
             
             if (_reduced && _line.find_first_not_of('_') == std::string::npos)
                 continue;
@@ -165,7 +160,7 @@ public:
 
         for (i32 _y = -1; _y < (i32)FIELD_HEIGHT; _y++) {
             for (u32 _x = 0; _x < FIELD_WIDTH; _x++) {
-                _field.set_number_at(_x, _y, defs::to_piece(at(_x, _y)));
+                _field.set_number_at(_x, _y, at(_x, _y));
             }
         }
 

@@ -247,9 +247,9 @@ public:
             _name += std::string(_max - _name.size(), ' ');
         
         std::vector<piece> _pieces(_name.size());
-        std::transform(_name.begin(), _name.end(), _pieces.begin(), [] (char __c) {
-            if (__c == '\0' || __c == ' ' || __c == ';') return piece::empty;
-            else return defs::to_piece(__c);
+        std::transform(_name.begin(), _name.end(), _pieces.begin(), [] (char _c) {
+            if (_c == '\0' || _c == ' ' || _c == ';') return piece::empty;
+            else return defs::to_piece(_c);
         });
 
         return _pieces;

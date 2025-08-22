@@ -1,4 +1,5 @@
-#pragma once
+#ifndef STRLIB_H
+#define STRLIB_H
 
 #include <string>
 #include <numeric>
@@ -253,3 +254,5 @@ public:
         return true;
     }
 };
+
+#endif

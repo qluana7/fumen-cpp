@@ -188,8 +188,8 @@ private:
             if (_act.m_operation.m_piece != piece::empty) {
                 _page.m_operation = static_cast<field_operation>(
                     mino(
-                        defs::to_char(_act.m_operation.m_piece),
-                        defs::to_string(_act.m_operation.m_rotation),
+                        _act.m_operation.m_piece,
+                        _act.m_operation.m_rotation,
                         _act.m_operation.m_x,
                         _act.m_operation.m_y
                     )

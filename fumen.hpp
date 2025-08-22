@@ -14,12 +14,7 @@ namespace fumen {
 using field = fumen::details::field;
 using piece = fumen::details::piece;
 using rotation = fumen::details::rotation;
-
-struct operation {
-    piece m_piece;
-    rotation m_rotation;
-    u32 m_x, m_y;
-};
+using operation = fumen::details::field_operation;
 
 struct fumen_page {
     field m_field;
@@ -39,6 +34,12 @@ struct fumen_page {
 
 using fumen_pages = std::vector<fumen_page>;
 
+inline static char piece_to_char(piece _p)
+{ return fumen::details::defs::to_char(_p); }
+
+inline static piece char_to_piece(char _ch)
+{ return fumen::details::defs::to_piece(_ch); }
+
 inline static std::string encode(const fumen_pages& _pgs) {
     fumen::details::encode_pages _epgs;
     _epgs.reserve(_pgs.size());
@@ -50,8 +51,8 @@ inline static std::string encode(const fumen_pages& _pgs) {
         _epg.m_comment = _pg.m_comment;
         if (_pg.m_operation)
             _epg.m_operation = fumen::details::field_operation {
-                fumen::details::defs::to_char(_pg.m_operation->m_piece),
-                fumen::details::defs::to_string(_pg.m_operation->m_rotation),
+                _pg.m_operation->m_piece,
+                _pg.m_operation->m_rotation,
                 _pg.m_operation->m_x,
                 _pg.m_operation->m_y
             };
@@ -75,8 +76,8 @@ inline static fumen_pages decode(const std::string& _str) {
         _fpg.m_comment = _pg.m_comment.value_or("");
         if (_pg.m_operation)
             _fpg.m_operation = {
-                fumen::details::defs::to_piece(_pg.m_operation->m_piece),
-                fumen::details::defs::to_rotation(_pg.m_operation->m_rotation),
+                _pg.m_operation->m_piece,
+                _pg.m_operation->m_rotation,
                 _pg.m_operation->m_x,
                 _pg.m_operation->m_y
             };
@@ -86,6 +87,24 @@ inline static fumen_pages decode(const std::string& _str) {
     }
 
     return _fpgs;
+}
+
+inline static bool is_valid(const std::string& _str) {
+    try {
+        fumen::decode(_str);
+        return true;
+    } catch (...) {
+        return false;
+    }
+}
+
+inline static bool try_decode(const std::string& _input, fumen_pages& _output) {
+    try {
+        _output = fumen::decode(_input);
+        return true;
+    } catch (...) {
+        return false;
+    }
 }
 
 }

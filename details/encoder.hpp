@@ -123,7 +123,7 @@ public:
             std::optional<field> _field = _current_page.m_field;
 
             inner_field _current_field =
-                _field ? inner_field(*_field) : _prev_field;
+                _field ? static_cast<inner_field>(*_field) : _prev_field;
             
             s_update_field(_buf, _last_ridx, _prev_field, _current_field);
 
@@ -135,8 +135,8 @@ public:
             
             inner_operation _piece = _current_page.m_operation ?
                 inner_operation {
-                    defs::to_piece(_current_page.m_operation->m_piece),
-                    defs::to_rotation(_current_page.m_operation->m_rotation),
+                    _current_page.m_operation->m_piece,
+                    _current_page.m_operation->m_rotation,
                     _current_page.m_operation->m_x,
                     _current_page.m_operation->m_y
                 } : inner_operation{ piece::empty, rotation::reverse, 0, 22 };
