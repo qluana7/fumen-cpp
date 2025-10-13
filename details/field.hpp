@@ -10,21 +10,21 @@
 namespace fumen::details {
 
 struct field_operation {
-    piece m_piece;
-    rotation m_rotation;
+    piece_type m_piece;
+    rotation_type m_rotation;
     u32 m_x, m_y;
 };
 
 struct mino {
     mino() = default;
-    mino(piece _piece, rotation _rotation, u32 _x, u32 _y)
+    mino(piece_type _piece, rotation_type _rotation, u32 _x, u32 _y)
     : m_piece(_piece), m_rotation(_rotation), m_x(_x), m_y(_y) {}
     mino(const field_operation& _op)
     : m_piece(_op.m_piece), m_rotation(_op.m_rotation), m_x(_op.m_x), m_y(_op.m_y) {}
 
 private:
-    piece m_piece;
-    rotation m_rotation;
+    piece_type m_piece;
+    rotation_type m_rotation;
     u32 m_x, m_y;
 
 public:
@@ -53,8 +53,8 @@ public:
         });
     }
 
-    piece piece() const { return m_piece; }
-    rotation rotation() const { return m_rotation; }
+    piece_type piece() const { return m_piece; }
+    rotation_type rotation() const { return m_rotation; }
     u32 x() const { return m_x; }
     u32 y() const { return m_y; }
 
@@ -125,10 +125,10 @@ public:
 
     void clear_line() { m_field.clear_line(); }
 
-    piece at(i32 _x, i32 _y) const
+    piece_type at(i32 _x, i32 _y) const
     { return m_field.get_number_at(_x, _y); }
 
-    void set(u32 _x, u32 _y, piece _p)
+    void set(u32 _x, u32 _y, piece_type _p)
     { m_field.set_number_at(_x, _y, _p); }
 
     std::string to_string(bool _reduced = true, char _sep = '\n', bool _garbage = true) const {

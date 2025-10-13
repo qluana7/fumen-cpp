@@ -185,7 +185,7 @@ private:
             page _page;
             _page.m_idx = _pidx;
             _page.m_inner_field = _current.second;
-            if (_act.m_operation.m_piece != piece::empty) {
+            if (_act.m_operation.m_piece != piece_type::empty) {
                 _page.m_operation = static_cast<field_operation>(
                     mino(
                         _act.m_operation.m_piece,

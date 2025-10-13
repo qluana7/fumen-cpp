@@ -19,46 +19,46 @@ private:
     u32 m_width, m_height, m_garbage_height;
     
     constexpr std::pair<u32, u32> m_decode_coordinate(
-        i64 _value, piece _piece, rotation _rotation
+        i64 _value, piece_type _piece, rotation_type _rotation
     ) const {
         i32 _x = _value % m_width;
         i32 _y = m_height - (_value / 10) - 1;
 
-        if (_piece == piece::O) {
-            if (_rotation == rotation::spawn) return { _x, _y - 1 };
-            else if (_rotation == rotation::reverse) return { _x + 1, _y };
-            else if (_rotation == rotation::left) return { _x + 1, _y - 1 };
-        } else if (_piece == piece::I) {
-            if (_rotation == rotation::reverse) return { _x + 1, _y };
-            else if (_rotation == rotation::left) return { _x, _y - 1 };
-        } else if (_piece == piece::S) {
-            if (_rotation == rotation::spawn) return { _x, _y - 1 };
-            else if (_rotation == rotation::right) return { _x - 1, _y };
-        } else if (_piece == piece::Z) {
-            if (_rotation == rotation::spawn) return { _x, _y - 1 };
-            else if (_rotation == rotation::left) return { _x + 1, _y };
+        if (_piece == piece_type::O) {
+            if (_rotation == rotation_type::spawn) return { _x, _y - 1 };
+            else if (_rotation == rotation_type::reverse) return { _x + 1, _y };
+            else if (_rotation == rotation_type::left) return { _x + 1, _y - 1 };
+        } else if (_piece == piece_type::I) {
+            if (_rotation == rotation_type::reverse) return { _x + 1, _y };
+            else if (_rotation == rotation_type::left) return { _x, _y - 1 };
+        } else if (_piece == piece_type::S) {
+            if (_rotation == rotation_type::spawn) return { _x, _y - 1 };
+            else if (_rotation == rotation_type::right) return { _x - 1, _y };
+        } else if (_piece == piece_type::Z) {
+            if (_rotation == rotation_type::spawn) return { _x, _y - 1 };
+            else if (_rotation == rotation_type::left) return { _x + 1, _y };
         }
 
         return { _x, _y };
     }
 
     constexpr u64 _M_encode_coordinate(
-        i32 _x, i32 _y, piece _piece, rotation _rotation
+        i32 _x, i32 _y, piece_type _piece, rotation_type _rotation
     ) const {
         if (!defs::is_mino(_piece)) _x = 0, _y = 22;
-        else if (_piece == piece::O) {
-            if (_rotation == rotation::spawn) _y++;
-            else if (_rotation == rotation::reverse) _x--;
-            else if (_rotation == rotation::left) _x--, _y++;
-        } else if (_piece == piece::I) {
-            if (_rotation == rotation::reverse) _x--;
-            else if (_rotation == rotation::left) _y++;
-        } else if (_piece == piece::S) {
-            if (_rotation == rotation::spawn) _y++;
-            else if (_rotation == rotation::right) _x++;
-        } else if (_piece == piece::Z) {
-            if (_rotation == rotation::spawn) _y++;
-            else if (_rotation == rotation::left) _x--;
+        else if (_piece == piece_type::O) {
+            if (_rotation == rotation_type::spawn) _y++;
+            else if (_rotation == rotation_type::reverse) _x--;
+            else if (_rotation == rotation_type::left) _x--, _y++;
+        } else if (_piece == piece_type::I) {
+            if (_rotation == rotation_type::reverse) _x--;
+            else if (_rotation == rotation_type::left) _y++;
+        } else if (_piece == piece_type::S) {
+            if (_rotation == rotation_type::spawn) _y++;
+            else if (_rotation == rotation_type::right) _x++;
+        } else if (_piece == piece_type::Z) {
+            if (_rotation == rotation_type::spawn) _y++;
+            else if (_rotation == rotation_type::left) _x--;
         }
 
         return (m_height - _y - 1) * m_width + _x;
@@ -71,10 +71,10 @@ public:
 
         action _act;
 
-        _act.m_operation.m_piece = static_cast<piece>(_value % 8);
+        _act.m_operation.m_piece = static_cast<piece_type>(_value % 8);
         _value /= 8;
 
-        _act.m_operation.m_rotation = static_cast<rotation>(_value % 4);
+        _act.m_operation.m_rotation = static_cast<rotation_type>(_value % 4);
         _value /= 4;
 
         auto [_x, _y] = m_decode_coordinate(

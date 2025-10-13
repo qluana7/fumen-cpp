@@ -12,8 +12,8 @@
 namespace fumen {
 
 using field = fumen::details::field;
-using piece = fumen::details::piece;
-using rotation = fumen::details::rotation;
+using piece = fumen::details::piece_type;
+using rotation = fumen::details::rotation_type;
 using operation = fumen::details::field_operation;
 
 struct fumen_page {

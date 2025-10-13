@@ -109,7 +109,7 @@ public:
     static bool is_quiz_comment(const std::string& _str)
     { return strlib::startswith(_str, "#Q="); }
 
-    quiz_operation get_operation(piece _piece) const {
+    quiz_operation get_operation(piece_type _piece) const {
         char
             _uname = defs::to_char(_piece),
             _cname = m_current();
@@ -225,19 +225,19 @@ public:
         return _quiz;
     }
 
-    piece get_hold() const {
-        if (!can_operate()) return piece::empty;
+    piece_type get_hold() const {
+        if (!can_operate()) return piece_type::empty;
 
         char _hold = m_hold();
 
         if (_hold == '\0' || _hold == ';')
-            return piece::empty;
+            return piece_type::empty;
         
         return defs::to_piece(_hold);
     }
 
-    std::vector<piece> get_nexts(i64 _max = 0) const {
-        if (!can_operate()) return std::vector<piece>(_max, piece::empty);
+    std::vector<piece_type> get_nexts(i64 _max = 0) const {
+        if (!can_operate()) return std::vector<piece_type>(_max, piece_type::empty);
 
         std::string _name =
             (std::string(m_current(), 1) + m_next() + m_least_in_active_bag())
@@ -246,9 +246,9 @@ public:
         if (_max != 0 && (i64)_name.size() < _max)
             _name += std::string(_max - _name.size(), ' ');
         
-        std::vector<piece> _pieces(_name.size());
+        std::vector<piece_type> _pieces(_name.size());
         std::transform(_name.begin(), _name.end(), _pieces.begin(), [] (char _c) {
-            if (_c == '\0' || _c == ' ' || _c == ';') return piece::empty;
+            if (_c == '\0' || _c == ' ' || _c == ';') return piece_type::empty;
             else return defs::to_piece(_c);
         });
 

@@ -22,7 +22,7 @@ using container_type = std::array<pos_type, 4>;
 
 /* static */ class field_util {
 public:
-    static constexpr container_type get_block_positions(piece _piece, rotation _rotation, u32 _x, u32 _y) {
+    static constexpr container_type get_block_positions(piece_type _piece, rotation_type _rotation, u32 _x, u32 _y) {
         container_type _cont = get_blocks(_piece, _rotation);
 
         for (auto& [_cx, _cy] : _cont) {
@@ -33,28 +33,28 @@ public:
         return _cont;
     }
 
-    static constexpr container_type get_blocks(piece _piece, rotation _rotation) {
+    static constexpr container_type get_blocks(piece_type _piece, rotation_type _rotation) {
         container_type _cont = get_pieces(_piece);
 
         switch (_rotation) {
-            case rotation::spawn: return _cont;
-            case rotation::right: return rotate_right(_cont);
-            case rotation::reverse: return rotate_reverse(_cont);
-            case rotation::left: return rotate_left(_cont);
+            case rotation_type::spawn: return _cont;
+            case rotation_type::right: return rotate_right(_cont);
+            case rotation_type::reverse: return rotate_reverse(_cont);
+            case rotation_type::left: return rotate_left(_cont);
         }
 
         throw std::invalid_argument("Invalid rotation");
     }
 
-    static constexpr container_type get_pieces(piece _piece) {
+    static constexpr container_type get_pieces(piece_type _piece) {
         switch (_piece) {
-            case piece::I: return { { { 0, 0 }, { -1, 0 }, { 1, 0 }, { 2, 0 } } };
-            case piece::T: return { { { 0, 0 }, { -1, 0 }, { 1, 0 }, { 0, 1 } } };
-            case piece::O: return { { { 0, 0 }, { 1, 0 }, { 0, 1 }, { 1, 1 } } };
-            case piece::L: return { { { 0, 0 }, { -1, 0 }, { 1, 0 }, { 1, 1 } } };
-            case piece::J: return { { { 0, 0 }, { -1, 0 }, { 1, 0 }, { -1, 1 } } };
-            case piece::S: return { { { 0, 0 }, { -1, 0 }, { 0, 1 }, { 1, 1 } } };
-            case piece::Z: return { { { 0, 0 }, { 1, 0 }, { 0, 1 }, { -1, 1 } } };
+            case piece_type::I: return { { { 0, 0 }, { -1, 0 }, { 1, 0 }, { 2, 0 } } };
+            case piece_type::T: return { { { 0, 0 }, { -1, 0 }, { 1, 0 }, { 0, 1 } } };
+            case piece_type::O: return { { { 0, 0 }, { 1, 0 }, { 0, 1 }, { 1, 1 } } };
+            case piece_type::L: return { { { 0, 0 }, { -1, 0 }, { 1, 0 }, { 1, 1 } } };
+            case piece_type::J: return { { { 0, 0 }, { -1, 0 }, { 1, 0 }, { -1, 1 } } };
+            case piece_type::S: return { { { 0, 0 }, { -1, 0 }, { 0, 1 }, { 1, 1 } } };
+            case piece_type::Z: return { { { 0, 0 }, { 1, 0 }, { 0, 1 }, { -1, 1 } } };
             default: break;
         }
 
@@ -87,32 +87,32 @@ public:
 };
 
 struct play_field {
-    play_field(const std::vector<piece>& _pieces, u32 _size = PLAY_BLOCKS)
+    play_field(const std::vector<piece_type>& _pieces, u32 _size = PLAY_BLOCKS)
     : m_pieces(_pieces), m_size(_size) {}
     play_field(u32 _size = PLAY_BLOCKS)
-    : play_field(std::vector<piece>(_size, piece::empty), _size) {}
+    : play_field(std::vector<piece_type>(_size, piece_type::empty), _size) {}
 
 private:
-    std::vector<piece> m_pieces;
+    std::vector<piece_type> m_pieces;
     u32 m_size = 0;
 
 public:
 #if __cplusplus >= 202002L
     constexpr
 #endif
-    piece get(i32 _x, i32 _y) const
+    piece_type get(i32 _x, i32 _y) const
     { return m_pieces[_x + _y * FIELD_WIDTH]; }
 
-    void set(i32 _x, i32 _y, piece _piece)
+    void set(i32 _x, i32 _y, piece_type _piece)
     { set_at(_x + _y * FIELD_WIDTH, _piece); }
 
-    void set_at(u32 _idx, piece _piece)
+    void set_at(u32 _idx, piece_type _piece)
     { m_pieces[_idx] = _piece; }
 
     void add_offset(i32 _x, i32 _y, i8 _value) {
-        piece& _piece = m_pieces[_x + _y * FIELD_WIDTH];
+        piece_type& _piece = m_pieces[_x + _y * FIELD_WIDTH];
 
-        _piece = static_cast<piece>(
+        _piece = static_cast<piece_type>(
             static_cast<i8>(_piece) + static_cast<i8>(_value)
         );
     }
@@ -124,24 +124,24 @@ public:
             set( _bx + _op.m_x, _by + _op.m_y, _op.m_piece);
     }
 
-    void fill_all(const container_type& _cont, piece _piece) {
+    void fill_all(const container_type& _cont, piece_type _piece) {
         for (const auto& [_x, _y] : _cont) {
             set(_x, _y, _piece);
         }
     }
 
     void clear_line() {
-        std::vector<piece> _field = m_pieces;
+        std::vector<piece_type> _field = m_pieces;
         u32 _top = m_pieces.size() / FIELD_WIDTH - 1;
 
         for (i32 _y = _top; _y >= 0; _y--) {
-            std::vector<piece> _line(
+            std::vector<piece_type> _line(
                 _field.begin() + (_y * FIELD_WIDTH),
                 _field.begin() + ((_y + 1) * FIELD_WIDTH)
             );
 
-            if (std::all_of(_line.begin(), _line.end(), [](piece _piece) { return _piece != piece::empty; })) {
-                std::vector<piece> _bottom(
+            if (std::all_of(_line.begin(), _line.end(), [](piece_type _piece) { return _piece != piece_type::empty; })) {
+                std::vector<piece_type> _bottom(
                     _field.begin(), _field.begin() + (_y * FIELD_WIDTH)
                 );
 
@@ -151,7 +151,7 @@ public:
                     _field.end()
                 );
 
-                _bottom.insert(_bottom.end(), FIELD_WIDTH, piece::empty);
+                _bottom.insert(_bottom.end(), FIELD_WIDTH, piece_type::empty);
 
                 _field = std::move(_bottom);
             }
@@ -161,7 +161,7 @@ public:
     }
 
     void up(const play_field& _up_field) {
-        std::vector<piece> _piece = _up_field.m_pieces;
+        std::vector<piece_type> _piece = _up_field.m_pieces;
         _piece.insert(_piece.end(), m_pieces.begin(), m_pieces.end());
 
         _piece.resize(m_size);
@@ -185,7 +185,7 @@ public:
                 m_pieces[_x + _y * FIELD_WIDTH] =
                     m_pieces[_x + 1 + _y * FIELD_WIDTH];
                 
-            m_pieces[FIELD_WIDTH - 1 + _y * FIELD_WIDTH] = piece::empty;
+            m_pieces[FIELD_WIDTH - 1 + _y * FIELD_WIDTH] = piece_type::empty;
         }
     }
 
@@ -197,27 +197,27 @@ public:
                 m_pieces[_x + _y * FIELD_WIDTH] =
                     m_pieces[_x - 1 + _y * FIELD_WIDTH];
                 
-            m_pieces[_y * FIELD_WIDTH] = piece::empty;
+            m_pieces[_y * FIELD_WIDTH] = piece_type::empty;
         }
     }
 
     void up_shift() {
-        std::vector<piece> _blocks(FIELD_WIDTH, piece::empty);
+        std::vector<piece_type> _blocks(FIELD_WIDTH, piece_type::empty);
         _blocks.insert(_blocks.end(), m_pieces.begin(), m_pieces.end() - FIELD_WIDTH);
 
         m_pieces = std::move(_blocks);
     }
 
     void down_shift() {
-        std::vector<piece> _blocks(m_pieces.begin() + FIELD_WIDTH, m_pieces.end());
-        _blocks.insert(_blocks.begin(), FIELD_WIDTH, piece::empty);
+        std::vector<piece_type> _blocks(m_pieces.begin() + FIELD_WIDTH, m_pieces.end());
+        _blocks.insert(_blocks.begin(), FIELD_WIDTH, piece_type::empty);
 
         m_pieces = std::move(_blocks);
     }
 
-    void clear() { m_pieces.assign(m_size, piece::empty); }
+    void clear() { m_pieces.assign(m_size, piece_type::empty); }
 
-    const std::vector<piece>& get_pieces() const { return m_pieces; }
+    const std::vector<piece_type>& get_pieces() const { return m_pieces; }
     u32 size() const { return m_size; }
 
     static play_field parse(const std::string& _lines, u32 _len = 0) {
@@ -253,13 +253,13 @@ public:
     void fill(inner_operation _op)
     { m_field.fill(_op); }
 
-    void fill_all(const container_type& _cont, piece _piece)
+    void fill_all(const container_type& _cont, piece_type _piece)
     { m_field.fill_all(_cont, _piece); }
 
 #if __cplusplus >= 202002L
     constexpr
 #endif
-    bool can_fill(piece _piece, rotation _rotation, i32 _x, i32 _y) const {
+    bool can_fill(piece_type _piece, rotation_type _rotation, i32 _x, i32 _y) const {
         container_type _pos = field_util::get_block_positions(_piece, _rotation, _x, _y);
 
         return std::all_of(_pos.begin(), _pos.end(), [this](const auto& _piece) {
@@ -267,7 +267,7 @@ public:
 
             return 0 <= _px && _px < (i32)FIELD_WIDTH
                 && 0 <= _py && _py < (i32)FIELD_HEIGHT
-                && get_number_at(_px, _py) == piece::empty;
+                && get_number_at(_px, _py) == piece_type::empty;
         });
     }
 
@@ -280,14 +280,14 @@ public:
 
             return 0 <= _px && _px < (i32)FIELD_WIDTH
                 && 0 <= _py && _py < (i32)FIELD_HEIGHT
-                && get_number_at(_px, _py) == piece::empty;
+                && get_number_at(_px, _py) == piece_type::empty;
         });
     }
 
 #if __cplusplus >= 202002L
     constexpr
 #endif
-    bool is_on_ground(piece _piece, rotation _rotation, i32 _x, i32 _y) const {
+    bool is_on_ground(piece_type _piece, rotation_type _rotation, i32 _x, i32 _y) const {
         return !can_fill(_piece, _rotation, _x, _y - 1);
     }
 
@@ -315,13 +315,13 @@ public:
             m_garbage.add_offset(_x, -(_y + 1), _value);
     }
 
-    void set_number_field_at(u32 _idx, piece _piece)
+    void set_number_field_at(u32 _idx, piece_type _piece)
     { m_field.set_at(_idx, _piece); }
 
-    void set_number_garbage_at(u32 _idx, piece _piece)
+    void set_number_garbage_at(u32 _idx, piece_type _piece)
     { m_garbage.set_at(_idx, _piece); }
 
-    void set_number_at(i32 _x, i32 _y, piece _piece) {
+    void set_number_at(i32 _x, i32 _y, piece_type _piece) {
         return _y >= 0 ?
             m_field.set(_x, _y, _piece) :
             m_garbage.set(_x, -(_y + 1), _piece);
@@ -330,7 +330,7 @@ public:
 #if __cplusplus >= 202002L
     constexpr
 #endif
-    piece get_number_at(i32 _x, i32 _y) const {
+    piece_type get_number_at(i32 _x, i32 _y) const {
         return _y >= 0 ?
             m_field.get(_x, _y) :
             m_garbage.get(_x, -(_y + 1));
@@ -339,14 +339,14 @@ public:
 #if __cplusplus >= 202002L
     constexpr
 #endif
-    piece get_number_at_index(u32 _idx, bool _is_field) const {
+    piece_type get_number_at_index(u32 _idx, bool _is_field) const {
         return _is_field ?
             m_field.get(_idx % FIELD_WIDTH, _idx / FIELD_WIDTH) :
             m_garbage.get(_idx % FIELD_WIDTH, -(_idx / FIELD_WIDTH + 1));
     }
 
-    const std::vector<piece>& field() const { return m_field.get_pieces(); }
-    const std::vector<piece>& garbage() const { return m_garbage.get_pieces(); }
+    const std::vector<piece_type>& field() const { return m_field.get_pieces(); }
+    const std::vector<piece_type>& garbage() const { return m_garbage.get_pieces(); }
 };
 
 }

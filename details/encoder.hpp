@@ -139,7 +139,7 @@ public:
                     _current_page.m_operation->m_rotation,
                     _current_page.m_operation->m_x,
                     _current_page.m_operation->m_y
-                } : inner_operation{ piece::empty, rotation::reverse, 0, 22 };
+                } : inner_operation{ piece_type::empty, rotation_type::reverse, 0, 22 };
             
             std::optional<std::string> _next_comment = std::nullopt;
 
