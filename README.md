@@ -51,7 +51,7 @@ int main() {
 
 int main() {
     fumen::fumen_page page;
-    std::string fumen_code = fumen::encode(pages);
+    std::string fumen_code = fumen::encode({ page });
 
     std::cout << fumen_code << std::endl;
 }
