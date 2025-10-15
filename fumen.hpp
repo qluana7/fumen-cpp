@@ -12,7 +12,7 @@
 namespace fumen {
 
 using field = fumen::details::field;
-using piece = fumen::details::piece_type;
+using piece_type = fumen::details::piece_type;
 using rotation = fumen::details::rotation_type;
 using operation = fumen::details::field_operation;
 
@@ -34,16 +34,16 @@ struct fumen_page {
 
 using fumen_pages = std::vector<fumen_page>;
 
-inline static char piece_to_char(piece _p)
+inline static char piece_to_char(piece_type _p)
 { return fumen::details::defs::to_char(_p); }
 
-inline static piece char_to_piece(char _ch)
+inline static piece_type char_to_piece(char _ch)
 { return fumen::details::defs::to_piece(_ch); }
 
 inline static bool is_valid_piece(char _p)
 { return static_cast<u8>(char_to_piece(_p)) <= 8u; }
 
-inline static bool is_valid_piece(piece _p)
+inline static bool is_valid_piece(piece_type _p)
 { return static_cast<u8>(_p) <= 8u; }
 
 inline static std::string encode(const fumen_pages& _pgs) {
